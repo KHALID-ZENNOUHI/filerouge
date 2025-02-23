@@ -1,0 +1,498 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740252108817-1
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_absence
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: date
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: justification
+                  type: BOOLEAN
+              - column:
+                  name: remark
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: justification_text
+                  type: VARCHAR(255)
+              - column:
+                  name: student_id
+                  type: UUID
+            tableName: absence
+  - changeSet:
+      id: 1740252108817-2
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_activity
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: date
+                  type: DATETIME
+              - column:
+                  name: resources
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: subject_id
+                  type: UUID
+            tableName: activity
+  - changeSet:
+      id: 1740252108817-3
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_administrator
+                  name: id
+                  type: UUID
+            tableName: administrator
+  - changeSet:
+      id: 1740252108817-4
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_class
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: level_id
+                  type: UUID
+            tableName: class
+  - changeSet:
+      id: 1740252108817-5
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_department
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: department
+  - changeSet:
+      id: 1740252108817-6
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_grade
+                  name: id
+                  type: UUID
+              - column:
+                  name: grade
+                  type: FLOAT
+              - column:
+                  name: student_id
+                  type: UUID
+              - column:
+                  name: activity_id
+                  type: UUID
+            tableName: grade
+  - changeSet:
+      id: 1740252108817-7
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_level
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: department_id
+                  type: UUID
+            tableName: level
+  - changeSet:
+      id: 1740252108817-8
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_parent
+                  name: id
+                  type: UUID
+            tableName: parent
+  - changeSet:
+      id: 1740252108817-9
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_session
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: start_date
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: end_date
+                  type: DATETIME
+              - column:
+                  name: teacher_id
+                  type: UUID
+              - column:
+                  name: subject_id
+                  type: UUID
+            tableName: session
+  - changeSet:
+      id: 1740252108817-10
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_student
+                  name: id
+                  type: UUID
+              - column:
+                  name: student_class_id
+                  type: UUID
+              - column:
+                  name: parent_id
+                  type: UUID
+            tableName: student
+  - changeSet:
+      id: 1740252108817-11
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_subject
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: subject
+  - changeSet:
+      id: 1740252108817-12
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_teacher
+                  name: id
+                  type: UUID
+            tableName: teacher
+  - changeSet:
+      id: 1740252108817-13
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user
+                  name: id
+                  type: UUID
+              - column:
+                  name: username
+                  type: VARCHAR(20)
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: cin
+                  type: VARCHAR(255)
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+              - column:
+                  name: birth_date
+                  type: DATE
+              - column:
+                  name: birth_place
+                  type: VARCHAR(255)
+              - column:
+                  name: address
+                  type: VARCHAR(255)
+              - column:
+                  name: gender
+                  type: VARCHAR(255)
+              - column:
+                  name: photo
+                  type: VARCHAR(255)
+            tableName: user
+  - changeSet:
+      id: 1740252108817-14
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: cin
+            constraintName: uc_user_cin
+            tableName: user
+  - changeSet:
+      id: 1740252108817-15
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: uc_user_username
+            tableName: user
+  - changeSet:
+      id: 1740252108817-16
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: student_id
+            baseTableName: absence
+            constraintName: FK_ABSENCE_ON_STUDENT
+            referencedColumnNames: id
+            referencedTableName: student
+  - changeSet:
+      id: 1740252108817-17
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: subject_id
+            baseTableName: activity
+            constraintName: FK_ACTIVITY_ON_SUBJECT
+            referencedColumnNames: id
+            referencedTableName: subject
+  - changeSet:
+      id: 1740252108817-18
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: administrator
+            constraintName: FK_ADMINISTRATOR_ON_ID
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740252108817-19
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: level_id
+            baseTableName: class
+            constraintName: FK_CLASS_ON_LEVEL
+            referencedColumnNames: id
+            referencedTableName: level
+  - changeSet:
+      id: 1740252108817-20
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: activity_id
+            baseTableName: grade
+            constraintName: FK_GRADE_ON_ACTIVITY
+            referencedColumnNames: id
+            referencedTableName: activity
+  - changeSet:
+      id: 1740252108817-21
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: student_id
+            baseTableName: grade
+            constraintName: FK_GRADE_ON_STUDENT
+            referencedColumnNames: id
+            referencedTableName: student
+  - changeSet:
+      id: 1740252108817-22
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: department_id
+            baseTableName: level
+            constraintName: FK_LEVEL_ON_DEPARTMENT
+            referencedColumnNames: id
+            referencedTableName: department
+  - changeSet:
+      id: 1740252108817-23
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: parent
+            constraintName: FK_PARENT_ON_ID
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740252108817-24
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: subject_id
+            baseTableName: session
+            constraintName: FK_SESSION_ON_SUBJECT
+            referencedColumnNames: id
+            referencedTableName: subject
+  - changeSet:
+      id: 1740252108817-25
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: teacher_id
+            baseTableName: session
+            constraintName: FK_SESSION_ON_TEACHER
+            referencedColumnNames: id
+            referencedTableName: teacher
+  - changeSet:
+      id: 1740252108817-26
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: student
+            constraintName: FK_STUDENT_ON_ID
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 1740252108817-27
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_id
+            baseTableName: student
+            constraintName: FK_STUDENT_ON_PARENT
+            referencedColumnNames: id
+            referencedTableName: parent
+  - changeSet:
+      id: 1740252108817-28
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: student_class_id
+            baseTableName: student
+            constraintName: FK_STUDENT_ON_STUDENTCLASS
+            referencedColumnNames: id
+            referencedTableName: class
+  - changeSet:
+      id: 1740252108817-29
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: teacher
+            constraintName: FK_TEACHER_ON_ID
+            referencedColumnNames: id
+            referencedTableName: user
+
