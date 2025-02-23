@@ -1,0 +1,6 @@
+spring:
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/master.yaml
+
