@@ -5,29 +5,38 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.dev.filerouge.domain.Enum.Gender;
 import org.dev.filerouge.domain.Enum.Role;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "users")
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id",updatable = false)
     private UUID id;
 
     @Column(unique = true)
-    @Size(min = 8, max = 20)
+    @Size(min = 8, max = 20, message = "The username must be at least 8 characters long.")
     private String username;
 
-    @NotBlank
+    @Size(min = 2, max = 20, message = "The first name must be at least 2 characters long.")
     private String firstName;
 
-    @NotBlank
+    @Size(min = 2, max = 20, message = "The last name must be at least 2 characters long.")
     private String lastName;
 
     @Email
@@ -61,7 +70,17 @@ public class User {
 
     private String photo;
 
+    @Column(insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = role.getPermissions().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+        return authorities;
+    }
 }
 
