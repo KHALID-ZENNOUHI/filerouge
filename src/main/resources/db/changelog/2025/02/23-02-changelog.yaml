@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740337873790-1
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - modifyDataType:
+            columnName: first_name
+            newDataType: VARCHAR(20)
+            tableName: user
+  - changeSet:
+      id: 1740337873790-2
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - modifyDataType:
+            columnName: last_name
+            newDataType: VARCHAR(20)
+            tableName: user
+

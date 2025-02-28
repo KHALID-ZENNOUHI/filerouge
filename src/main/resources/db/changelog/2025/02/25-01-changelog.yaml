@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740476632918-1
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_program
+                  name: id
+                  type: UUID
+              - column:
+                  name: classes_id
+                  type: UUID
+              - column:
+                  name: subject_id
+                  type: UUID
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+            tableName: program
+  - changeSet:
+      id: 1740476632918-2
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: classes_id
+            baseTableName: program
+            constraintName: FK_PROGRAM_ON_CLASSES
+            referencedColumnNames: id
+            referencedTableName: class
+  - changeSet:
+      id: 1740476632918-3
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: subject_id
+            baseTableName: program
+            constraintName: FK_PROGRAM_ON_SUBJECT
+            referencedColumnNames: id
+            referencedTableName: subject
+
