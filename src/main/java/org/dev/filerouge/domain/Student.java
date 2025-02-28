@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "students")
+@PrimaryKeyJoinColumn(name = "id")
+@DiscriminatorValue("STUDENT")
 @Getter
 @Setter
 @NoArgsConstructor
