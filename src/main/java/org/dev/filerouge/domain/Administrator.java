@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 
 @Entity
+@Table(name = "administrators")
+@PrimaryKeyJoinColumn(name = "id")
+@DiscriminatorValue("ADMINISTRATOR")
 @Getter
 @Setter
 @NoArgsConstructor
