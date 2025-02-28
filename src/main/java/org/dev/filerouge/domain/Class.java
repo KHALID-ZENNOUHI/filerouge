@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,4 +24,7 @@ public class Class {
 
     @ManyToOne
     private Level level;
+
+    @OneToMany(mappedBy = "Classes")
+    private List<Program> programs = new ArrayList<>();
 }
