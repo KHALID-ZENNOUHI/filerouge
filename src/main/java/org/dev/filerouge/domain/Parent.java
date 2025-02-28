@@ -5,6 +5,9 @@ import lombok.*;
 
 
 @Entity
+@Table(name = "parents")
+@PrimaryKeyJoinColumn(name = "id")
+@DiscriminatorValue("PARENT")
 @Getter
 @Setter
 @NoArgsConstructor
