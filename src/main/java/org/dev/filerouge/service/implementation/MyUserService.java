@@ -104,23 +104,4 @@ public class MyUserService {
         }
         userRepository.deleteById(id);
     }
-    
-    public User mapUserToRoleAndEncodePassword(User user, User userWithRole){
-        userWithRole.setId(user.getId());
-        userWithRole.setUsername(user.getUsername());
-        userWithRole.setFirstName(user.getFirstName());
-        userWithRole.setLastName(user.getLastName());
-        userWithRole.setEmail(user.getEmail());
-        userWithRole.setPassword(user.getPassword());
-        userWithRole.setRole(user.getRole());
-        userWithRole.setBirthDate(user.getBirthDate());
-        userWithRole.setBirthPlace(user.getBirthPlace());
-        userWithRole.setGender(user.getGender());
-        userWithRole.setAddress(user.getAddress());
-        userWithRole.setCin(user.getCin());
-        userWithRole.setPhone(user.getPhone());
-        userWithRole.setPhoto(user.getPhoto());
-        userWithRole.setPassword(passwordEncoder.encode(userWithRole.getPassword()));
-        return userWithRole;
-    }
 }
