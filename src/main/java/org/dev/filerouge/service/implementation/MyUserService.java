@@ -49,9 +49,9 @@ public class MyUserService {
 
         User userToSave;
         switch (user.getRole()) {
-            case ADMINISTRATOR -> userToSave = new Administrator();
-            case STUDENT -> userToSave = new Student();
-            case TEACHER -> userToSave = new Teacher();
+            case ROLE_ADMINISTRATOR -> userToSave = new Administrator();
+            case ROLE_STUDENT -> userToSave = new Student();
+            case ROLE_TEACHER -> userToSave = new Teacher();
             default -> throw new IllegalArgumentException("Role not found: " + user.getRole());
         }
 
