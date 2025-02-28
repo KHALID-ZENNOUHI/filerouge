@@ -1,12 +1,14 @@
 package org.dev.filerouge.domain;
 
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Entity;
 
 import java.util.Set;
 
 @Entity
+@Table(name = "teachers")
+@PrimaryKeyJoinColumn(name = "id")
+@DiscriminatorValue("TEACHER")
 @Getter
 @Setter
 @NoArgsConstructor
