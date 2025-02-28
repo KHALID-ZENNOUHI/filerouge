@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +22,6 @@ public class Subject {
     @NotBlank
     private String name;
 
-//    @ManyToMany(mappedBy = "subjects")
-//    private Set<Class> classes;
+    @OneToMany(mappedBy = "subject")
+    private List<Program> programs = new ArrayList<>();
 }
