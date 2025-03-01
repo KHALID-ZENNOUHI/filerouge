@@ -1,51 +1,85 @@
 package org.dev.filerouge.service.implementation;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.dev.filerouge.domain.Department;
 import org.dev.filerouge.repository.DepartmentRepository;
 import org.dev.filerouge.service.IDepartmentService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
+import org.dev.filerouge.web.error.ServiceException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Implementation of {@link IDepartmentService} for managing {@link Department} entities.
+ */
 @Service
-@RequiredArgsConstructor
-public class DepartmentService implements IDepartmentService {
-    private final DepartmentRepository departmentRepository;
+@Transactional
+@Slf4j
+public class DepartmentService extends BaseServiceImpl<Department, DepartmentRepository> implements IDepartmentService {
+
+    public DepartmentService(DepartmentRepository departmentRepository) {
+        super(departmentRepository, "Department");
+    }
 
     @Override
     public Department save(Department department) {
-        return departmentRepository.save(department);
+        log.debug("Saving department: {}", department);
+
+        // Validate name uniqueness
+        if (existsByName(department.getName())) {
+            throw new ServiceException.DuplicateResourceException("Department", "name", department.getName());
+        }
+
+        // Validate not null/blank fields (as a secondary validation after @NotBlank)
+        validateDepartment(department);
+
+        return super.save(department);
     }
 
     @Override
     public Department update(Department department) {
-        Optional<Department> existingDepartment = departmentRepository.findById(department.getId());
-        if (existingDepartment.isEmpty()) {
-            throw new IllegalArgumentException("Department not found with ID: " + department.getId());
+        log.debug("Updating department: {}", department);
+
+        // Check if department exists
+        if (!existsById(department.getId())) {
+            throw new ServiceException.ResourceNotFoundException("Department", "id", department.getId());
         }
-        return departmentRepository.save(department);
-    }
 
-    @Override
-    public Department findById(UUID id) {
-        return departmentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
-    }
-
-    @Override
-    public void delete(UUID id) {
-        if (!departmentRepository.existsById(id)) {
-            throw new IllegalArgumentException("Department not found with ID: " + id);
+        // Validate name uniqueness (only if name is changed)
+        Department existingDepartment = findById(department.getId());
+        if (!existingDepartment.getName().equals(department.getName()) && existsByName(department.getName())) {
+            throw new ServiceException.DuplicateResourceException("Department", "name", department.getName());
         }
-        departmentRepository.deleteById(id);
+
+        // Validate not null/blank fields
+        validateDepartment(department);
+
+        return super.update(department);
     }
 
     @Override
-    public Page<Department> findAll(int page, int size) {
-        return departmentRepository.findAll(PageRequest.of(page, size));
+    public Department findByName(String name) {
+        log.debug("Finding department by name: {}", name);
+        return repository.findByName(name)
+                .orElseThrow(() -> new ServiceException.ResourceNotFoundException("Department", "name", name));
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return repository.existsByName(name);
+    }
+
+    /**
+     * Validates department fields
+     *
+     * @param department the department to validate
+     * @throws ServiceException.ValidationException if validation fails
+     */
+    private void validateDepartment(Department department) {
+        if (department.getName() == null || department.getName().trim().isEmpty()) {
+            throw new ServiceException.ValidationException("Department name cannot be empty");
+        }
     }
 }
