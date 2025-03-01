@@ -1,51 +1,224 @@
-package org.dev.filerouge.controller;
+package org.dev.filerouge.web.api;
 
-import lombok.RequiredArgsConstructor;
 import org.dev.filerouge.domain.Program;
 import org.dev.filerouge.service.IProgramService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+/**
+ * REST controller for managing {@link Program} entities.
+ */
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/programs")
-public class ProgramController {
+public class ProgramController extends BaseController<Program, IProgramService> {
 
-    private final IProgramService programService;
-
-    @PostMapping
-    public ResponseEntity<Program> createProgram(@RequestBody Program program) {
-        Program savedProgram = programService.save(program);
-        return ResponseEntity.ok(savedProgram);
+    public ProgramController(IProgramService programService) {
+        super(programService);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Program> updateProgram(@PathVariable UUID id, @RequestBody Program program) {
-        program.setId(id); // Ensure the ID matches the path variable
-        Program updatedProgram = programService.update(program);
-        return ResponseEntity.ok(updatedProgram);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setId(Program program, UUID id) {
+        program.setId(id);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Program> getProgramById(@PathVariable UUID id) {
-        Program program = programService.findById(id);
+    /**
+     * Finds all programs for a specific class.
+     *
+     * @param classId The class ID
+     * @return The list of programs
+     */
+    @GetMapping("/by-class/{classId}")
+    public ResponseEntity<List<Program>> findByClassId(@PathVariable UUID classId) {
+        List<Program> programs = service.findByClassId(classId);
+        return ResponseEntity.ok(programs);
+    }
+
+    /**
+     * Finds all programs for a specific class with pagination.
+     *
+     * @param classId The class ID
+     * @param page The page number (0-indexed)
+     * @param size The page size
+     * @return A page of programs
+     */
+    @GetMapping("/by-class/{classId}/paged")
+    public ResponseEntity<Page<Program>> findByClassIdPaged(
+            @PathVariable UUID classId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Program> programs = service.findByClassId(classId, page, size);
+        return ResponseEntity.ok(programs);
+    }
+
+    /**
+     * Finds all programs for a specific subject.
+     *
+     * @param subjectId The subject ID
+     * @return The list of programs
+     */
+    @GetMapping("/by-subject/{subjectId}")
+    public ResponseEntity<List<Program>> findBySubjectId(@PathVariable UUID subjectId) {
+        List<Program> programs = service.findBySubjectId(subjectId);
+        return ResponseEntity.ok(programs);
+    }
+
+    /**
+     * Finds all programs for a specific subject with pagination.
+     *
+     * @param subjectId The subject ID
+     * @param page The page number (0-indexed)
+     * @param size The page size
+     * @return A page of programs
+     */
+    @GetMapping("/by-subject/{subjectId}/paged")
+    public ResponseEntity<Page<Program>> findBySubjectIdPaged(
+            @PathVariable UUID subjectId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Program> programs = service.findBySubjectId(subjectId, page, size);
+        return ResponseEntity.ok(programs);
+    }
+
+    /**
+     * Finds a program by class and subject.
+     *
+     * @param classId The class ID
+     * @param subjectId The subject ID
+     * @return The found program
+     */
+    @GetMapping("/by-class/{classId}/subject/{subjectId}")
+    public ResponseEntity<Program> findByClassAndSubject(
+            @PathVariable UUID classId,
+            @PathVariable UUID subjectId) {
+        Program program = service.findByClassAndSubject(classId, subjectId);
         return ResponseEntity.ok(program);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProgram(@PathVariable UUID id) {
-        programService.delete(id);
+    /**
+     * Checks if a program exists for a specific class and subject.
+     *
+     * @param classId The class ID
+     * @param subjectId The subject ID
+     * @return true if a program exists for the class and subject, false otherwise
+     */
+    @GetMapping("/exists/class/{classId}/subject/{subjectId}")
+    public ResponseEntity<Boolean> existsByClassAndSubject(
+            @PathVariable UUID classId,
+            @PathVariable UUID subjectId) {
+        boolean exists = service.existsByClassAndSubject(classId, subjectId);
+        return ResponseEntity.ok(exists);
+    }
+
+    /**
+     * Gets program statistics for a class.
+     *
+     * @param classId The class ID
+     * @return A map of statistics
+     */
+    @GetMapping("/statistics/class/{classId}")
+    public ResponseEntity<Map<String, Object>> getClassProgramStatistics(@PathVariable UUID classId) {
+        Map<String, Object> statistics = service.getClassProgramStatistics(classId);
+        return ResponseEntity.ok(statistics);
+    }
+
+    /**
+     * Gets program statistics for a subject.
+     *
+     * @param subjectId The subject ID
+     * @return A map of statistics
+     */
+    @GetMapping("/statistics/subject/{subjectId}")
+    public ResponseEntity<Map<String, Object>> getSubjectProgramStatistics(@PathVariable UUID subjectId) {
+        Map<String, Object> statistics = service.getSubjectProgramStatistics(subjectId);
+        return ResponseEntity.ok(statistics);
+    }
+
+    /**
+     * Counts the number of programs for a specific class.
+     *
+     * @param classId The class ID
+     * @return The number of programs
+     */
+    @GetMapping("/count/by-class/{classId}")
+    public ResponseEntity<Long> countByClassId(@PathVariable UUID classId) {
+        long count = service.countByClassId(classId);
+        return ResponseEntity.ok(count);
+    }
+
+    /**
+     * Counts the number of programs for a specific subject.
+     *
+     * @param subjectId The subject ID
+     * @return The number of programs
+     */
+    @GetMapping("/count/by-subject/{subjectId}")
+    public ResponseEntity<Long> countBySubjectId(@PathVariable UUID subjectId) {
+        long count = service.countBySubjectId(subjectId);
+        return ResponseEntity.ok(count);
+    }
+
+    /**
+     * Deletes all programs for a specific class.
+     *
+     * @param classId The class ID
+     * @return HTTP 204 No Content status
+     */
+    @DeleteMapping("/by-class/{classId}")
+    public ResponseEntity<Void> deleteByClassId(@PathVariable UUID classId) {
+        service.deleteByClassId(classId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Program>> getAllPrograms(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<Program> programs = programService.findAll(page, size);
-        return ResponseEntity.ok(programs);
+    /**
+     * Deletes all programs for a specific subject.
+     *
+     * @param subjectId The subject ID
+     * @return HTTP 204 No Content status
+     */
+    @DeleteMapping("/by-subject/{subjectId}")
+    public ResponseEntity<Void> deleteBySubjectId(@PathVariable UUID subjectId) {
+        service.deleteBySubjectId(subjectId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Assigns a subject to a class.
+     *
+     * @param classId The class ID
+     * @param subjectId The subject ID
+     * @param description The program description
+     * @return The created program with HTTP 201 Created status
+     */
+    @PostMapping("/assign-subject")
+    public ResponseEntity<Program> assignSubjectToClass(
+            @RequestParam UUID classId,
+            @RequestParam UUID subjectId,
+            @RequestParam(required = false) String description) {
+        Program program = service.assignSubjectToClass(classId, subjectId, description);
+        return ResponseEntity.status(HttpStatus.CREATED).body(program);
+    }
+
+    /**
+     * Removes a subject from a class.
+     *
+     * @param classId The class ID
+     * @param subjectId The subject ID
+     * @return HTTP 204 No Content status
+     */
+    @DeleteMapping("/remove-subject")
+    public ResponseEntity<Void> removeSubjectFromClass(
+            @RequestParam UUID classId,
+            @RequestParam UUID subjectId) {
+        service.removeSubjectFromClass(classId, subjectId);
+        return ResponseEntity.noContent().build();
     }
 }

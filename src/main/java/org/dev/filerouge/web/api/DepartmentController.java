@@ -1,46 +1,52 @@
 package org.dev.filerouge.web.api;
 
-import lombok.RequiredArgsConstructor;
 import org.dev.filerouge.domain.Department;
 import org.dev.filerouge.service.IDepartmentService;
-import org.dev.filerouge.service.implementation.DepartmentService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+/**
+ * REST controller for managing {@link Department} entities.
+ */
 @RestController
 @RequestMapping("/api/departments")
-@RequiredArgsConstructor
-public class DepartmentController {
-    private final IDepartmentService departmentService;
+public class DepartmentController extends BaseController<Department, IDepartmentService> {
 
-    @PostMapping
-    public ResponseEntity<Department> createDepartment(@RequestBody Department department) {
-        return ResponseEntity.ok(departmentService.save(department));
+    public DepartmentController(IDepartmentService departmentService) {
+        super(departmentService);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Department> updateDepartment(@PathVariable UUID id, @RequestBody Department department) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setId(Department department, UUID id) {
         department.setId(id);
-        return ResponseEntity.ok(departmentService.update(department));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Department> getDepartmentById(@PathVariable UUID id) {
-        return ResponseEntity.ok(departmentService.findById(id));
+    /**
+     * Finds a department by its name.
+     *
+     * @param name The name to search for
+     * @return The found department
+     */
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<Department> findByName(@PathVariable String name) {
+        Department department = service.findByName(name);
+        return ResponseEntity.ok(department);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDepartment(@PathVariable UUID id) {
-        departmentService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<Page<Department>> getAllDepartments(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(departmentService.findAll(page, size));
+    /**
+     * Checks if a department with the given name exists.
+     *
+     * @param name The name to check
+     * @return true if a department with the name exists, false otherwise
+     */
+    @GetMapping("/exists/name/{name}")
+    public ResponseEntity<Boolean> existsByName(@PathVariable String name) {
+        boolean exists = service.existsByName(name);
+        return ResponseEntity.ok(exists);
     }
 }

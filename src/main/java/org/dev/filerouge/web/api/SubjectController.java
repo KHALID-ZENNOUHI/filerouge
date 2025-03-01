@@ -1,47 +1,89 @@
 package org.dev.filerouge.web.api;
 
-import lombok.RequiredArgsConstructor;
 import org.dev.filerouge.domain.Subject;
-
 import org.dev.filerouge.service.ISubjectService;
-import org.dev.filerouge.service.implementation.SubjectService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * REST controller for managing {@link Subject} entities.
+ */
 @RestController
 @RequestMapping("/api/subjects")
-@RequiredArgsConstructor
-public class SubjectController {
-    private final ISubjectService subjectService;
+public class SubjectController extends BaseController<Subject, ISubjectService> {
 
-    @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody Subject subject) {
-        return ResponseEntity.ok(subjectService.save(subject));
+    public SubjectController(ISubjectService subjectService) {
+        super(subjectService);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable UUID id, @RequestBody Subject subject) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setId(Subject subject, UUID id) {
         subject.setId(id);
-        return ResponseEntity.ok(subjectService.update(subject));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Subject> getSubjectById(@PathVariable UUID id) {
-        return ResponseEntity.ok(subjectService.findById(id));
+    /**
+     * Finds a subject by its name.
+     *
+     * @param name The name to search for
+     * @return The found subject
+     */
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<Subject> findByName(@PathVariable String name) {
+        Subject subject = service.findByName(name);
+        return ResponseEntity.ok(subject);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubject(@PathVariable UUID id) {
-        subjectService.delete(id);
-        return ResponseEntity.noContent().build();
+    /**
+     * Checks if a subject with the given name exists.
+     *
+     * @param name The name to check
+     * @return true if a subject with the name exists, false otherwise
+     */
+    @GetMapping("/exists/name/{name}")
+    public ResponseEntity<Boolean> existsByName(@PathVariable String name) {
+        boolean exists = service.existsByName(name);
+        return ResponseEntity.ok(exists);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Subject>> getAllSubjects(@RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(subjectService.findAll(page, size));
+    /**
+     * Finds all subjects associated with a specific class.
+     *
+     * @param classId The class ID
+     * @return The list of subjects
+     */
+    @GetMapping("/by-class/{classId}")
+    public ResponseEntity<List<Subject>> findByClassId(@PathVariable UUID classId) {
+        List<Subject> subjects = service.findByClassId(classId);
+        return ResponseEntity.ok(subjects);
+    }
+
+    /**
+     * Finds all subjects taught by a specific teacher.
+     *
+     * @param teacherId The teacher ID
+     * @return The list of subjects
+     */
+    @GetMapping("/by-teacher/{teacherId}")
+    public ResponseEntity<List<Subject>> findByTeacherId(@PathVariable UUID teacherId) {
+        List<Subject> subjects = service.findByTeacherId(teacherId);
+        return ResponseEntity.ok(subjects);
+    }
+
+    /**
+     * Searches for subjects by name.
+     *
+     * @param searchTerm The search term
+     * @return The list of matching subjects
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<Subject>> searchByName(@RequestParam String searchTerm) {
+        List<Subject> subjects = service.searchByName(searchTerm);
+        return ResponseEntity.ok(subjects);
     }
 }

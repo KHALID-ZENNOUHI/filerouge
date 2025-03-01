@@ -1,46 +1,119 @@
 package org.dev.filerouge.web.api;
 
-import lombok.RequiredArgsConstructor;
 import org.dev.filerouge.domain.Grade;
 import org.dev.filerouge.service.IGradeService;
-import org.dev.filerouge.service.implementation.GradeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * REST controller for managing {@link Grade} entities.
+ */
 @RestController
 @RequestMapping("/api/grades")
-@RequiredArgsConstructor
-public class GradeController {
-    private final IGradeService gradeService;
+public class GradeController extends BaseController<Grade, IGradeService> {
 
-    @PostMapping
-    public ResponseEntity<Grade> createGrade(@RequestBody Grade grade) {
-        return ResponseEntity.ok(gradeService.save(grade));
+    public GradeController(IGradeService gradeService) {
+        super(gradeService);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Grade> updateGrade(@PathVariable UUID id, @RequestBody Grade grade) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setId(Grade grade, UUID id) {
         grade.setId(id);
-        return ResponseEntity.ok(gradeService.update(grade));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Grade> getGradeById(@PathVariable UUID id) {
-        return ResponseEntity.ok(gradeService.findById(id));
+    /**
+     * Finds all grades for a specific student.
+     *
+     * @param studentId The student ID
+     * @return The list of grades
+     */
+    @GetMapping("/by-student/{studentId}")
+    public ResponseEntity<List<Grade>> findByStudentId(@PathVariable UUID studentId) {
+        List<Grade> grades = service.findByStudentId(studentId);
+        return ResponseEntity.ok(grades);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGrade(@PathVariable UUID id) {
-        gradeService.delete(id);
+    /**
+     * Finds all grades for a specific student with pagination.
+     *
+     * @param studentId The student ID
+     * @param page The page number (0-indexed)
+     * @param size The page size
+     * @return A page of grades
+     */
+    @GetMapping("/by-student/{studentId}/paged")
+    public ResponseEntity<Page<Grade>> findByStudentIdPaged(
+            @PathVariable UUID studentId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Grade> grades = service.findByStudentId(studentId, page, size);
+        return ResponseEntity.ok(grades);
+    }
+
+    /**
+     * Finds all grades for a specific activity.
+     *
+     * @param activityId The activity ID
+     * @return The list of grades
+     */
+    @GetMapping("/by-activity/{activityId}")
+    public ResponseEntity<List<Grade>> findByActivityId(@PathVariable UUID activityId) {
+        List<Grade> grades = service.findByActivityId(activityId);
+        return ResponseEntity.ok(grades);
+    }
+
+    /**
+     * Calculates the average grade for a student.
+     *
+     * @param studentId The student ID
+     * @return The average grade, or null if the student has no grades
+     */
+    @GetMapping("/student/{studentId}/average")
+    public ResponseEntity<Float> calculateStudentAverage(@PathVariable UUID studentId) {
+        Float average = service.calculateStudentAverage(studentId);
+        return ResponseEntity.ok(average);
+    }
+
+    /**
+     * Calculates the average grade for an activity.
+     *
+     * @param activityId The activity ID
+     * @return The average grade, or null if the activity has no grades
+     */
+    @GetMapping("/activity/{activityId}/average")
+    public ResponseEntity<Float> calculateActivityAverage(@PathVariable UUID activityId) {
+        Float average = service.calculateActivityAverage(activityId);
+        return ResponseEntity.ok(average);
+    }
+
+    /**
+     * Deletes all grades for a student.
+     *
+     * @param studentId The student ID
+     * @return HTTP 204 No Content status
+     */
+    @DeleteMapping("/by-student/{studentId}")
+    public ResponseEntity<Void> deleteByStudentId(@PathVariable UUID studentId) {
+        service.deleteByStudentId(studentId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Grade>> getAllGrades(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(gradeService.findAll(page, size));
+    /**
+     * Deletes all grades for an activity.
+     *
+     * @param activityId The activity ID
+     * @return HTTP 204 No Content status
+     */
+    @DeleteMapping("/by-activity/{activityId}")
+    public ResponseEntity<Void> deleteByActivityId(@PathVariable UUID activityId) {
+        service.deleteByActivityId(activityId);
+        return ResponseEntity.noContent().build();
     }
 }
