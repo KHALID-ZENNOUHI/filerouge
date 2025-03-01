@@ -1,20 +1,25 @@
 package org.dev.filerouge.service;
 
 import org.dev.filerouge.domain.Department;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+/**
+ * Service interface for managing {@link Department} entities.
+ */
+public interface IDepartmentService extends BaseService<Department> {
 
-@Service
-public interface IDepartmentService {
-    Department save(Department department);
+    /**
+     * Finds a department by its name
+     *
+     * @param name the name to search for
+     * @return the found department, or null if not found
+     */
+    Department findByName(String name);
 
-    Department update(Department department);
-
-    Department findById(UUID id);
-
-    void delete(UUID id);
-
-    Page<Department> findAll(int page, int size);
+    /**
+     * Checks if a department with the given name exists
+     *
+     * @param name the name to check
+     * @return true if a department with the name exists, false otherwise
+     */
+    boolean existsByName(String name);
 }

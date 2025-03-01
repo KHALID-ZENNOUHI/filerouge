@@ -1,18 +1,52 @@
 package org.dev.filerouge.service;
 
 import org.dev.filerouge.domain.Subject;
-import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.UUID;
 
-public interface ISubjectService {
-    Subject save(Subject subject);
+/**
+ * Service interface for managing {@link Subject} entities.
+ */
+public interface ISubjectService extends BaseService<Subject> {
 
-    Subject update(Subject subject);
+    /**
+     * Finds a subject by its name
+     *
+     * @param name the name to search for
+     * @return the found subject
+     */
+    Subject findByName(String name);
 
-    Subject findById(UUID id);
+    /**
+     * Checks if a subject with the given name exists
+     *
+     * @param name the name to check
+     * @return true if a subject with the name exists, false otherwise
+     */
+    boolean existsByName(String name);
 
-    void delete(UUID id);
+    /**
+     * Finds all subjects associated with a specific class
+     *
+     * @param classId the class ID
+     * @return the list of subjects
+     */
+    List<Subject> findByClassId(UUID classId);
 
-    Page<Subject> findAll(int page, int size);
+    /**
+     * Finds all subjects taught by a specific teacher
+     *
+     * @param teacherId the teacher ID
+     * @return the list of subjects
+     */
+    List<Subject> findByTeacherId(UUID teacherId);
+
+    /**
+     * Searches for subjects by name (partial match, case insensitive)
+     *
+     * @param searchTerm the search term
+     * @return the list of matching subjects
+     */
+    List<Subject> searchByName(String searchTerm);
 }
