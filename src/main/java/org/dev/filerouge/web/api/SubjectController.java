@@ -63,17 +63,17 @@ public class SubjectController extends BaseController<Subject, ISubjectService> 
         return ResponseEntity.ok(subjects);
     }
 
-    /**
-     * Finds all subjects taught by a specific teacher.
-     *
-     * @param teacherId The teacher ID
-     * @return The list of subjects
-     */
-    @GetMapping("/by-teacher/{teacherId}")
-    public ResponseEntity<List<Subject>> findByTeacherId(@PathVariable UUID teacherId) {
-        List<Subject> subjects = service.findByTeacherId(teacherId);
-        return ResponseEntity.ok(subjects);
-    }
+//    /**
+//     * Finds all subjects taught by a specific teacher.
+//     *
+//     * @param teacherId The teacher ID
+//     * @return The list of subjects
+//     */
+//    @GetMapping("/by-teacher/{teacherId}")
+//    public ResponseEntity<List<Subject>> findByTeacherId(@PathVariable UUID teacherId) {
+//        List<Subject> subjects = service.findByTeacherId(teacherId);
+//        return ResponseEntity.ok(subjects);
+//    }
 
     /**
      * Searches for subjects by name.

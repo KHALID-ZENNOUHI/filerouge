@@ -33,15 +33,9 @@ public interface SubjectRepository extends JpaRepository<Subject, UUID> {
      * @param classId the class ID
      * @return the list of subjects
      */
-    List<Subject> findByProgramsClassesId(UUID classId);
+    List<Subject> findByProgramsClazzId(UUID classId);
 
-    /**
-     * Finds all subjects for which a teacher has sessions
-     *
-     * @param teacherId the teacher ID
-     * @return the list of subjects
-     */
-    List<Subject> findBySessionsTeacherId(UUID teacherId);
+
 
     /**
      * Finds all subjects by name containing the search term (case insensitive)

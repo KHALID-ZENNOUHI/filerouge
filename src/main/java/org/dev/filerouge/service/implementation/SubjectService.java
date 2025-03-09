@@ -98,20 +98,20 @@ public class SubjectService extends BaseServiceImpl<Subject, SubjectRepository> 
             throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
         }
 
-        return repository.findByProgramsClassesId(classId);
+        return repository.findByProgramsClazzId(classId);
     }
 
-    @Override
-    public List<Subject> findByTeacherId(UUID teacherId) {
-        log.debug("Finding subjects by teacher ID: {}", teacherId);
-
-        // Validate teacher existence
-        if (!teacherRepository.existsById(teacherId)) {
-            throw new ServiceException.ResourceNotFoundException("Teacher", "id", teacherId);
-        }
-
-        return repository.findBySessionsTeacherId(teacherId);
-    }
+//    @Override
+//    public List<Subject> findByTeacherId(UUID teacherId) {
+//        log.debug("Finding subjects by teacher ID: {}", teacherId);
+//
+//        // Validate teacher existence
+//        if (!teacherRepository.existsById(teacherId)) {
+//            throw new ServiceException.ResourceNotFoundException("Teacher", "id", teacherId);
+//        }
+//
+//        return repository.findBySessionsTeacherId(teacherId);
+//    }
 
     @Override
     public List<Subject> searchByName(String searchTerm) {
