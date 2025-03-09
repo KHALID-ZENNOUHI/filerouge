@@ -25,6 +25,6 @@ public class Class {
     @ManyToOne
     private Level level;
 
-    @OneToMany(mappedBy = "Classes")
+    @OneToMany(mappedBy = "clazz")
     private List<Program> programs = new ArrayList<>();
 }
