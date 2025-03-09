@@ -34,13 +34,13 @@ public interface ISubjectService extends BaseService<Subject> {
      */
     List<Subject> findByClassId(UUID classId);
 
-    /**
-     * Finds all subjects taught by a specific teacher
-     *
-     * @param teacherId the teacher ID
-     * @return the list of subjects
-     */
-    List<Subject> findByTeacherId(UUID teacherId);
+//    /**
+//     * Finds all subjects taught by a specific teacher
+//     *
+//     * @param teacherId the teacher ID
+//     * @return the list of subjects
+//     */
+//    List<Subject> findByTeacherId(UUID teacherId);
 
     /**
      * Searches for subjects by name (partial match, case insensitive)
