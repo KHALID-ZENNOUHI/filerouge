@@ -18,27 +18,27 @@ public interface ProgramRepository extends JpaRepository<Program, UUID> {
     /**
      * Finds all programs for a specific class
      *
-     * @param classes the class
+     * @param clazz the class
      * @return the list of programs
      */
-    List<Program> findByClasses(Class classes);
+    List<Program> findByClazz(Class clazz);
 
     /**
      * Finds all programs for a specific class with pagination
      *
-     * @param classes the class
+     * @param clazz the class
      * @param pageable the pagination information
      * @return a page of programs
      */
-    Page<Program> findByClasses(Class classes, Pageable pageable);
+    Page<Program> findByClazz(Class clazz, Pageable pageable);
 
     /**
      * Finds all programs for a specific class ID
      *
-     * @param classId the class ID
+     * @param clazzId the class ID
      * @return the list of programs
      */
-    List<Program> findByClassesId(UUID classId);
+    List<Program> findByClazzId(UUID clazzId);
 
     /**
      * Finds all programs for a specific subject
@@ -68,28 +68,28 @@ public interface ProgramRepository extends JpaRepository<Program, UUID> {
     /**
      * Finds a program by class and subject
      *
-     * @param classId the class ID
+     * @param clazzId the class ID
      * @param subjectId the subject ID
      * @return an optional containing the found program, or empty if not found
      */
-    Optional<Program> findByClassesIdAndSubjectId(UUID classId, UUID subjectId);
+    Optional<Program> findByClazzIdAndSubjectId(UUID clazzId, UUID subjectId);
 
     /**
      * Checks if a program exists for a specific class and subject
      *
-     * @param classId the class ID
+     * @param clazzId the class ID
      * @param subjectId the subject ID
      * @return true if a program exists for the class and subject, false otherwise
      */
-    boolean existsByClassesIdAndSubjectId(UUID classId, UUID subjectId);
+    boolean existsByClazzIdAndSubjectId(UUID clazzId, UUID subjectId);
 
     /**
      * Counts the number of programs for a specific class
      *
-     * @param classId the class ID
+     * @param clazzId the class ID
      * @return the number of programs
      */
-    long countByClassesId(UUID classId);
+    long countByClazzId(UUID clazzId);
 
     /**
      * Counts the number of programs for a specific subject
@@ -102,9 +102,9 @@ public interface ProgramRepository extends JpaRepository<Program, UUID> {
     /**
      * Deletes all programs for a specific class
      *
-     * @param classId the class ID
+     * @param clazzId the class ID
      */
-    void deleteByClassesId(UUID classId);
+    void deleteByClazzId(UUID clazzId);
 
     /**
      * Deletes all programs for a specific subject
