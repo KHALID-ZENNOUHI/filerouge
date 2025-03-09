@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741310260838-1
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: two_factor_enabled
+            tableName: users
+        - dropColumn:
+            columnName: two_factor_secret
+            tableName: users
+

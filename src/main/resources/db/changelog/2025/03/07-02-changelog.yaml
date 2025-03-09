@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741310926224-3
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: program
+            constraintName: fk_program_on_classes
+  - changeSet:
+      id: 1741310926224-1
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: class_id
+                  type: UUID
+            tableName: program
+  - changeSet:
+      id: 1741310926224-2
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: class_id
+            baseTableName: program
+            constraintName: FK_PROGRAM_ON_CLASS
+            referencedColumnNames: id
+            referencedTableName: class
+  - changeSet:
+      id: 1741310926224-4
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: classes_id
+            tableName: program
+
