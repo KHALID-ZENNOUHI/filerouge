@@ -46,8 +46,8 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
         validateProgram(program);
 
         // Validate class existence
-        if (program.getClasses() != null && program.getClasses().getId() != null) {
-            UUID classId = program.getClasses().getId();
+        if (program.getClazz() != null && program.getClazz().getId() != null) {
+            UUID classId = program.getClazz().getId();
             if (!classRepository.existsById(classId)) {
                 throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
             }
@@ -66,11 +66,11 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
         }
 
         // Check if program already exists for the class and subject
-        if (existsByClassAndSubject(program.getClasses().getId(), program.getSubject().getId())) {
+        if (existsByClassAndSubject(program.getClazz().getId(), program.getSubject().getId())) {
             throw new ServiceException.DuplicateResourceException(
                     "Program",
                     "class and subject",
-                    program.getClasses().getId() + " and " + program.getSubject().getId()
+                    program.getClazz().getId() + " and " + program.getSubject().getId()
             );
         }
 
@@ -90,8 +90,8 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
         validateProgram(program);
 
         // Validate class existence
-        if (program.getClasses() != null && program.getClasses().getId() != null) {
-            UUID classId = program.getClasses().getId();
+        if (program.getClazz() != null && program.getClazz().getId() != null) {
+            UUID classId = program.getClazz().getId();
             if (!classRepository.existsById(classId)) {
                 throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
             }
@@ -111,9 +111,9 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
 
         // Get existing program to check if class or subject has changed
         Program existingProgram = findById(program.getId());
-        UUID oldClassId = existingProgram.getClasses().getId();
+        UUID oldClassId = existingProgram.getClazz().getId();
         UUID oldSubjectId = existingProgram.getSubject().getId();
-        UUID newClassId = program.getClasses().getId();
+        UUID newClassId = program.getClazz().getId();
         UUID newSubjectId = program.getSubject().getId();
 
         // Check if program already exists for the class and subject (only if class or subject has changed)
@@ -130,15 +130,15 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
     }
 
     @Override
-    public List<Program> findByClassId(UUID classId) {
-        log.debug("Finding programs by class ID: {}", classId);
+    public List<Program> findByClassId(UUID clazzId) {
+        log.debug("Finding programs by class ID: {}", clazzId);
 
         // Validate class existence
-        if (!classRepository.existsById(classId)) {
-            throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
+        if (!classRepository.existsById(clazzId)) {
+            throw new ServiceException.ResourceNotFoundException("Class", "id", clazzId);
         }
 
-        return repository.findByClassesId(classId);
+        return repository.findByClazzId(clazzId);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
         Class aClass = classRepository.findById(classId)
                 .orElseThrow(() -> new ServiceException.ResourceNotFoundException("Class", "id", classId));
 
-        return repository.findByClasses(aClass, PageRequest.of(page, size));
+        return repository.findByClazz(aClass, PageRequest.of(page, size));
     }
 
     @Override
@@ -184,12 +184,12 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
     }
 
     @Override
-    public Program findByClassAndSubject(UUID classId, UUID subjectId) {
-        log.debug("Finding program by class ID and subject ID: {}, {}", classId, subjectId);
+    public Program findByClassAndSubject(UUID clazzId, UUID subjectId) {
+        log.debug("Finding program by class ID and subject ID: {}, {}", clazzId, subjectId);
 
         // Validate class existence
-        if (!classRepository.existsById(classId)) {
-            throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
+        if (!classRepository.existsById(clazzId)) {
+            throw new ServiceException.ResourceNotFoundException("Class", "id", clazzId);
         }
 
         // Validate subject existence
@@ -197,16 +197,16 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
             throw new ServiceException.ResourceNotFoundException("Subject", "id", subjectId);
         }
 
-        return repository.findByClassesIdAndSubjectId(classId, subjectId)
-                .orElseThrow(() -> new ServiceException.ResourceNotFoundException("Program", "class and subject", classId + " and " + subjectId));
+        return repository.findByClazzIdAndSubjectId(clazzId, subjectId)
+                .orElseThrow(() -> new ServiceException.ResourceNotFoundException("Program", "class and subject", clazzId + " and " + subjectId));
     }
 
     @Override
-    public boolean existsByClassAndSubject(UUID classId, UUID subjectId) {
-        if (classId == null || subjectId == null) {
+    public boolean existsByClassAndSubject(UUID clazzId, UUID subjectId) {
+        if (clazzId == null || subjectId == null) {
             return false;
         }
-        return repository.existsByClassesIdAndSubjectId(classId, subjectId);
+        return repository.existsByClazzIdAndSubjectId(clazzId, subjectId);
     }
 
     @Override
@@ -264,7 +264,7 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
 
         // Get classes
         List<String> classNames = programs.stream()
-                .map(program -> program.getClasses().getName())
+                .map(program -> program.getClazz().getName())
                 .sorted()
                 .toList();
 
@@ -274,15 +274,15 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
     }
 
     @Override
-    public long countByClassId(UUID classId) {
-        log.debug("Counting programs by class ID: {}", classId);
+    public long countByClassId(UUID clazzId) {
+        log.debug("Counting programs by class ID: {}", clazzId);
 
         // Validate class existence
-        if (!classRepository.existsById(classId)) {
-            throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
+        if (!classRepository.existsById(clazzId)) {
+            throw new ServiceException.ResourceNotFoundException("Class", "id", clazzId);
         }
 
-        return repository.countByClassesId(classId);
+        return repository.countByClazzId(clazzId);
     }
 
     @Override
@@ -298,15 +298,15 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
     }
 
     @Override
-    public void deleteByClassId(UUID classId) {
-        log.debug("Deleting all programs for class ID: {}", classId);
+    public void deleteByClassId(UUID clazzId) {
+        log.debug("Deleting all programs for class ID: {}", clazzId);
 
         // Validate class existence
-        if (!classRepository.existsById(classId)) {
-            throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
+        if (!classRepository.existsById(clazzId)) {
+            throw new ServiceException.ResourceNotFoundException("Class", "id", clazzId);
         }
 
-        repository.deleteByClassesId(classId);
+        repository.deleteByClazzId(clazzId);
     }
 
     @Override
@@ -346,7 +346,7 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
 
         // Create and save the program
         Program program = new Program();
-        program.setClasses(classRepository.findById(classId).orElseThrow());
+        program.setClazz(classRepository.findById(classId).orElseThrow());
         program.setSubject(subjectRepository.findById(subjectId).orElseThrow());
         program.setDescription(description);
 
@@ -354,15 +354,15 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
     }
 
     @Override
-    public void removeSubjectFromClass(UUID classId, UUID subjectId) {
-        log.debug("Removing subject ID {} from class ID {}", subjectId, classId);
+    public void removeSubjectFromClass(UUID clazzId, UUID subjectId) {
+        log.debug("Removing subject ID {} from class ID {}", subjectId, clazzId);
 
         // Find the program
-        Program program = repository.findByClassesIdAndSubjectId(classId, subjectId)
+        Program program = repository.findByClazzIdAndSubjectId(clazzId, subjectId)
                 .orElseThrow(() -> new ServiceException.ResourceNotFoundException(
                         "Program",
                         "class and subject",
-                        classId + " and " + subjectId
+                        clazzId + " and " + subjectId
                 ));
 
         // Delete the program
@@ -376,7 +376,7 @@ public class ProgramService extends BaseServiceImpl<Program, ProgramRepository> 
      * @throws ServiceException.ValidationException if validation fails
      */
     private void validateProgram(Program program) {
-        if (program.getClasses() == null || program.getClasses().getId() == null) {
+        if (program.getClazz() == null || program.getClazz().getId() == null) {
             throw new ServiceException.ValidationException("Class is required for a program");
         }
 
