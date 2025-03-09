@@ -17,7 +17,7 @@ public class Program {
     private UUID id;
 
     @ManyToOne
-    private Class Classes;
+    private Class clazz;
 
     @ManyToOne
     private Subject subject;
