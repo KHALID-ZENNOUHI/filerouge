@@ -1,5 +1,6 @@
 package org.dev.filerouge.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -25,6 +26,8 @@ public class Class {
     @ManyToOne
     private Level level;
 
-    @OneToMany(mappedBy = "clazz")
-    private List<Program> programs = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "program_id")
+    @JsonBackReference("program-class")
+    private Program program;
 }

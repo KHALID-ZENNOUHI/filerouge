@@ -1,5 +1,6 @@
 package org.dev.filerouge.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -22,6 +23,8 @@ public class Subject {
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "subject")
-    private List<Program> programs = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "program_id")
+    @JsonBackReference("program-subject")
+    private Program program;
 }

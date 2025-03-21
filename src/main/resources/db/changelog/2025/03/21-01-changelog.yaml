@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1742518654522-5
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: program
+            constraintName: fk_program_on_clazz
+  - changeSet:
+      id: 1742518654522-6
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: program
+            constraintName: fk_program_on_subject
+  - changeSet:
+      id: 1742518654522-1
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: program_id
+                  type: UUID
+            tableName: class
+  - changeSet:
+      id: 1742518654522-2
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: program_id
+                  type: UUID
+            tableName: subject
+  - changeSet:
+      id: 1742518654522-3
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: program_id
+            baseTableName: class
+            constraintName: FK_CLASS_ON_PROGRAM
+            referencedColumnNames: id
+            referencedTableName: program
+  - changeSet:
+      id: 1742518654522-4
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: program_id
+            baseTableName: subject
+            constraintName: FK_SUBJECT_ON_PROGRAM
+            referencedColumnNames: id
+            referencedTableName: program
+  - changeSet:
+      id: 1742518654522-7
+      author: khalid.zennouhi
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: clazz_id
+            tableName: program
+        - dropColumn:
+            columnName: subject_id
+            tableName: program
+
