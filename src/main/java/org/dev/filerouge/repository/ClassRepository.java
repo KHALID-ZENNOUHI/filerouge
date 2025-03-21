@@ -62,4 +62,37 @@ public interface ClassRepository extends JpaRepository<Class, UUID> {
      * @return the number of classes
      */
     long countByLevelId(UUID levelId);
+
+    /**
+     * Finds all classes for a specific program
+     *
+     * @param programId the program ID
+     * @return the list of classes
+     */
+    List<Class> findByProgramId(UUID programId);
+
+    /**
+     * Finds all classes for a specific program with pagination
+     *
+     * @param programId the program ID
+     * @param pageable the pagination information
+     * @return a page of classes
+     */
+    Page<Class> findByProgramId(UUID programId, Pageable pageable);
+
+    /**
+     * Finds all classes that share a program with a specific subject
+     *
+     * @param subjectId the subject ID
+     * @return the list of classes
+     */
+    List<Class> findByProgramSubjectsId(UUID subjectId);
+
+    /**
+     * Counts the number of classes for a specific program
+     *
+     * @param programId the program ID
+     * @return the number of classes
+     */
+    long countByProgramId(UUID programId);
 }

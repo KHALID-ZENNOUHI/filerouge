@@ -104,4 +104,82 @@ public class ClassController extends BaseController<Class, IClassService> {
         long count = service.countByLevelId(levelId);
         return ResponseEntity.ok(count);
     }
+
+    /**
+     * Finds all classes for a specific program.
+     *
+     * @param programId The program ID
+     * @return The list of classes
+     */
+    @GetMapping("/by-program/{programId}")
+    public ResponseEntity<List<Class>> findByProgramId(@PathVariable UUID programId) {
+        List<Class> classes = service.findByProgramId(programId);
+        return ResponseEntity.ok(classes);
+    }
+
+    /**
+     * Finds all classes for a specific program with pagination.
+     *
+     * @param programId The program ID
+     * @param page The page number (0-indexed)
+     * @param size The page size
+     * @return A page of classes
+     */
+    @GetMapping("/by-program/{programId}/paged")
+    public ResponseEntity<Page<Class>> findByProgramIdPaged(
+            @PathVariable UUID programId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Class> classes = service.findByProgramId(programId, page, size);
+        return ResponseEntity.ok(classes);
+    }
+
+    /**
+     * Finds all classes that share a program with a specific subject.
+     *
+     * @param subjectId The subject ID
+     * @return The list of classes
+     */
+    @GetMapping("/by-subject/{subjectId}")
+    public ResponseEntity<List<Class>> findBySubjectId(@PathVariable UUID subjectId) {
+        List<Class> classes = service.findBySubjectId(subjectId);
+        return ResponseEntity.ok(classes);
+    }
+
+    /**
+     * Counts the number of classes for a specific program.
+     *
+     * @param programId The program ID
+     * @return The number of classes
+     */
+    @GetMapping("/count/by-program/{programId}")
+    public ResponseEntity<Long> countByProgramId(@PathVariable UUID programId) {
+        long count = service.countByProgramId(programId);
+        return ResponseEntity.ok(count);
+    }
+
+    /**
+     * Assigns a class to a program.
+     *
+     * @param classId The class ID
+     * @param programId The program ID
+     * @return The updated class
+     */
+    @PutMapping("/{classId}/assign-to-program/{programId}")
+    public ResponseEntity<Class> assignToProgram(@PathVariable UUID classId, @PathVariable UUID programId) {
+        Class updatedClass = service.assignToProgram(classId, programId);
+        return ResponseEntity.ok(updatedClass);
+    }
+
+    /**
+     * Removes a class from its program.
+     *
+     * @param classId The class ID
+     * @return The updated class
+     */
+    @PutMapping("/{classId}/remove-from-program")
+    public ResponseEntity<Class> removeFromProgram(@PathVariable UUID classId) {
+        Class updatedClass = service.removeFromProgram(classId);
+        return ResponseEntity.ok(updatedClass);
+    }
 }
