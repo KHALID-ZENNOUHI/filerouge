@@ -1,133 +1,145 @@
 package org.dev.filerouge.service;
 
 import org.dev.filerouge.domain.Program;
-import org.dev.filerouge.service.BaseService;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Service interface for managing {@link Program} entities.
- */
 public interface IProgramService extends BaseService<Program> {
+    /**
+     * Find all programs with pagination
+     *
+     * @param page the page number
+     * @param size the page size
+     * @return paginated list of programs
+     */
+    Page<Program> findAll(int page, int size);
 
     /**
-     * Finds all programs for a specific class
+     * Find programs by class ID
      *
      * @param classId the class ID
-     * @return the list of programs
+     * @return list of programs containing the class
      */
     List<Program> findByClassId(UUID classId);
 
     /**
-     * Finds all programs for a specific class with pagination
+     * Find programs by class ID with pagination
      *
      * @param classId the class ID
-     * @param page the page number (0-based)
+     * @param page the page number
      * @param size the page size
-     * @return a page of programs
+     * @return paginated list of programs containing the class
      */
     Page<Program> findByClassId(UUID classId, int page, int size);
 
     /**
-     * Finds all programs for a specific subject
+     * Find programs by subject ID
      *
      * @param subjectId the subject ID
-     * @return the list of programs
+     * @return list of programs containing the subject
      */
     List<Program> findBySubjectId(UUID subjectId);
 
     /**
-     * Finds all programs for a specific subject with pagination
+     * Find programs by subject ID with pagination
      *
      * @param subjectId the subject ID
-     * @param page the page number (0-based)
+     * @param page the page number
      * @param size the page size
-     * @return a page of programs
+     * @return paginated list of programs containing the subject
      */
     Page<Program> findBySubjectId(UUID subjectId, int page, int size);
 
     /**
-     * Finds a program by class and subject
+     * Find a program by class ID and subject ID
      *
      * @param classId the class ID
      * @param subjectId the subject ID
-     * @return the found program
+     * @return the program containing both class and subject
      */
     Program findByClassAndSubject(UUID classId, UUID subjectId);
 
     /**
-     * Checks if a program exists for a specific class and subject
+     * Check if a program exists with the given class and subject
      *
      * @param classId the class ID
      * @param subjectId the subject ID
-     * @return true if a program exists for the class and subject, false otherwise
+     * @return true if a program exists with the class and subject
      */
     boolean existsByClassAndSubject(UUID classId, UUID subjectId);
 
     /**
-     * Gets program statistics for a class
+     * Get statistics about programs associated with a class
      *
      * @param classId the class ID
-     * @return a map of statistics
+     * @return map of statistics
      */
     Map<String, Object> getClassProgramStatistics(UUID classId);
 
     /**
-     * Gets program statistics for a subject
+     * Get statistics about programs associated with a subject
      *
      * @param subjectId the subject ID
-     * @return a map of statistics
+     * @return map of statistics
      */
     Map<String, Object> getSubjectProgramStatistics(UUID subjectId);
 
     /**
-     * Counts the number of programs for a specific class
+     * Count programs by class ID
      *
      * @param classId the class ID
-     * @return the number of programs
+     * @return the count of programs
      */
     long countByClassId(UUID classId);
 
     /**
-     * Counts the number of programs for a specific subject
+     * Count programs by subject ID
      *
      * @param subjectId the subject ID
-     * @return the number of programs
+     * @return the count of programs
      */
     long countBySubjectId(UUID subjectId);
 
     /**
-     * Deletes all programs for a specific class
+     * Delete all programs for a class
      *
      * @param classId the class ID
      */
     void deleteByClassId(UUID classId);
 
     /**
-     * Deletes all programs for a specific subject
+     * Delete all programs for a subject
      *
      * @param subjectId the subject ID
      */
     void deleteBySubjectId(UUID subjectId);
 
     /**
-     * Assigns a subject to a class
+     * Assign a subject to a class in a program
      *
      * @param classId the class ID
      * @param subjectId the subject ID
      * @param description the program description
-     * @return the created program
+     * @return the program with the class and subject
      */
     Program assignSubjectToClass(UUID classId, UUID subjectId, String description);
 
     /**
-     * Removes a subject from a class
+     * Remove a subject from a class
      *
      * @param classId the class ID
      * @param subjectId the subject ID
      */
     void removeSubjectFromClass(UUID classId, UUID subjectId);
+
+    /**
+     * Check if a program exists by ID
+     *
+     * @param id the program ID
+     * @return true if the program exists
+     */
+    boolean existsById(UUID id);
 }
