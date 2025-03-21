@@ -27,20 +27,20 @@ public interface ISubjectService extends BaseService<Subject> {
     boolean existsByName(String name);
 
     /**
-     * Finds all subjects associated with a specific class
+     * Finds all subjects associated with a specific class through program relationship
      *
      * @param classId the class ID
      * @return the list of subjects
      */
     List<Subject> findByClassId(UUID classId);
 
-//    /**
-//     * Finds all subjects taught by a specific teacher
-//     *
-//     * @param teacherId the teacher ID
-//     * @return the list of subjects
-//     */
-//    List<Subject> findByTeacherId(UUID teacherId);
+    /**
+     * Finds all subjects for a specific program
+     *
+     * @param programId the program ID
+     * @return the list of subjects
+     */
+    List<Subject> findByProgramId(UUID programId);
 
     /**
      * Searches for subjects by name (partial match, case insensitive)
@@ -49,4 +49,21 @@ public interface ISubjectService extends BaseService<Subject> {
      * @return the list of matching subjects
      */
     List<Subject> searchByName(String searchTerm);
+
+    /**
+     * Assigns a subject to a program
+     *
+     * @param subjectId the subject ID
+     * @param programId the program ID
+     * @return the updated subject
+     */
+    Subject assignToProgram(UUID subjectId, UUID programId);
+
+    /**
+     * Removes a subject from its program
+     *
+     * @param subjectId the subject ID
+     * @return the updated subject
+     */
+    Subject removeFromProgram(UUID subjectId);
 }

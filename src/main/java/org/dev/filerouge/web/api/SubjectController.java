@@ -52,7 +52,7 @@ public class SubjectController extends BaseController<Subject, ISubjectService> 
     }
 
     /**
-     * Finds all subjects associated with a specific class.
+     * Finds all subjects associated with a specific class through program relationship.
      *
      * @param classId The class ID
      * @return The list of subjects
@@ -63,17 +63,17 @@ public class SubjectController extends BaseController<Subject, ISubjectService> 
         return ResponseEntity.ok(subjects);
     }
 
-//    /**
-//     * Finds all subjects taught by a specific teacher.
-//     *
-//     * @param teacherId The teacher ID
-//     * @return The list of subjects
-//     */
-//    @GetMapping("/by-teacher/{teacherId}")
-//    public ResponseEntity<List<Subject>> findByTeacherId(@PathVariable UUID teacherId) {
-//        List<Subject> subjects = service.findByTeacherId(teacherId);
-//        return ResponseEntity.ok(subjects);
-//    }
+    /**
+     * Finds all subjects for a specific program.
+     *
+     * @param programId The program ID
+     * @return The list of subjects
+     */
+    @GetMapping("/by-program/{programId}")
+    public ResponseEntity<List<Subject>> findByProgramId(@PathVariable UUID programId) {
+        List<Subject> subjects = service.findByProgramId(programId);
+        return ResponseEntity.ok(subjects);
+    }
 
     /**
      * Searches for subjects by name.
@@ -85,5 +85,32 @@ public class SubjectController extends BaseController<Subject, ISubjectService> 
     public ResponseEntity<List<Subject>> searchByName(@RequestParam String searchTerm) {
         List<Subject> subjects = service.searchByName(searchTerm);
         return ResponseEntity.ok(subjects);
+    }
+
+    /**
+     * Assigns a subject to a program.
+     *
+     * @param subjectId The subject ID
+     * @param programId The program ID
+     * @return The updated subject
+     */
+    @PutMapping("/{subjectId}/assign-to-program/{programId}")
+    public ResponseEntity<Subject> assignToProgram(
+            @PathVariable UUID subjectId,
+            @PathVariable UUID programId) {
+        Subject updatedSubject = service.assignToProgram(subjectId, programId);
+        return ResponseEntity.ok(updatedSubject);
+    }
+
+    /**
+     * Removes a subject from its program.
+     *
+     * @param subjectId The subject ID
+     * @return The updated subject
+     */
+    @PutMapping("/{subjectId}/remove-from-program")
+    public ResponseEntity<Subject> removeFromProgram(@PathVariable UUID subjectId) {
+        Subject updatedSubject = service.removeFromProgram(subjectId);
+        return ResponseEntity.ok(updatedSubject);
     }
 }

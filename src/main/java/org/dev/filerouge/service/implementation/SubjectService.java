@@ -2,13 +2,14 @@ package org.dev.filerouge.service.implementation;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.dev.filerouge.domain.Program;
 import org.dev.filerouge.domain.Subject;
 import org.dev.filerouge.web.error.ServiceException;
 import org.dev.filerouge.repository.ClassRepository;
+import org.dev.filerouge.repository.ProgramRepository;
 import org.dev.filerouge.repository.SubjectRepository;
 import org.dev.filerouge.repository.TeacherRepository;
 import org.dev.filerouge.service.ISubjectService;
-import org.dev.filerouge.service.implementation.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,13 +25,16 @@ public class SubjectService extends BaseServiceImpl<Subject, SubjectRepository> 
 
     private final ClassRepository classRepository;
     private final TeacherRepository teacherRepository;
+    private final ProgramRepository programRepository;
 
     public SubjectService(SubjectRepository subjectRepository,
                           ClassRepository classRepository,
-                          TeacherRepository teacherRepository) {
+                          TeacherRepository teacherRepository,
+                          ProgramRepository programRepository) {
         super(subjectRepository, "Subject");
         this.classRepository = classRepository;
         this.teacherRepository = teacherRepository;
+        this.programRepository = programRepository;
     }
 
     @Override
@@ -66,6 +70,11 @@ public class SubjectService extends BaseServiceImpl<Subject, SubjectRepository> 
             throw new ServiceException.DuplicateResourceException("Subject", "name", subject.getName());
         }
 
+        // Preserve program relationship
+        if (subject.getProgram() == null && existingSubject.getProgram() != null) {
+            subject.setProgram(existingSubject.getProgram());
+        }
+
         return super.update(subject);
     }
 
@@ -98,20 +107,20 @@ public class SubjectService extends BaseServiceImpl<Subject, SubjectRepository> 
             throw new ServiceException.ResourceNotFoundException("Class", "id", classId);
         }
 
-        return repository.findByProgramsClazzId(classId);
+        return repository.findByProgramClassId(classId);
     }
 
-//    @Override
-//    public List<Subject> findByTeacherId(UUID teacherId) {
-//        log.debug("Finding subjects by teacher ID: {}", teacherId);
-//
-//        // Validate teacher existence
-//        if (!teacherRepository.existsById(teacherId)) {
-//            throw new ServiceException.ResourceNotFoundException("Teacher", "id", teacherId);
-//        }
-//
-//        return repository.findBySessionsTeacherId(teacherId);
-//    }
+    @Override
+    public List<Subject> findByProgramId(UUID programId) {
+        log.debug("Finding subjects by program ID: {}", programId);
+
+        // Validate program existence
+        if (!programRepository.existsById(programId)) {
+            throw new ServiceException.ResourceNotFoundException("Program", "id", programId);
+        }
+
+        return repository.findByProgramId(programId);
+    }
 
     @Override
     public List<Subject> searchByName(String searchTerm) {
@@ -122,6 +131,65 @@ public class SubjectService extends BaseServiceImpl<Subject, SubjectRepository> 
         }
 
         return repository.findByNameContainingIgnoreCase(searchTerm.trim());
+    }
+
+    @Override
+    public Subject assignToProgram(UUID subjectId, UUID programId) {
+        log.debug("Assigning subject ID {} to program ID {}", subjectId, programId);
+
+        // Validate subject existence
+        Subject subject = findById(subjectId);
+
+        // Validate program existence
+        if (!programRepository.existsById(programId)) {
+            throw new ServiceException.ResourceNotFoundException("Program", "id", programId);
+        }
+        Program program = programRepository.getReferenceById(programId);
+
+        // Check if subject is already assigned to this program
+        if (subject.getProgram() != null && subject.getProgram().getId().equals(programId)) {
+            return subject; // Already assigned
+        }
+
+        // If subject is already assigned to another program, remove from that program first
+        if (subject.getProgram() != null) {
+            // Remove the subject from its current program's subjects list
+            Program currentProgram = subject.getProgram();
+            currentProgram.getSubjects().remove(subject);
+            programRepository.save(currentProgram);
+        }
+
+        // Assign subject to new program
+        subject.setProgram(program);
+        program.getSubjects().add(subject);
+
+        // Save both entities
+        programRepository.save(program);
+        return repository.save(subject);
+    }
+
+    @Override
+    public Subject removeFromProgram(UUID subjectId) {
+        log.debug("Removing subject ID {} from its program", subjectId);
+
+        // Validate subject existence
+        Subject subject = findById(subjectId);
+
+        // If subject is not assigned to a program, nothing to do
+        if (subject.getProgram() == null) {
+            return subject;
+        }
+
+        // Remove the subject from its program's subjects list
+        Program program = subject.getProgram();
+        program.getSubjects().remove(subject);
+
+        // Clear the program reference from the subject
+        subject.setProgram(null);
+
+        // Save both entities
+        programRepository.save(program);
+        return repository.save(subject);
     }
 
     /**
